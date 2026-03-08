@@ -1,6 +1,6 @@
 # PkBlog Deployment Guide
 
-Deploy **Frontend** on **Vercel** and **Backend** on **Render**.
+Deploy **Frontend** on **Vercel** or **Netlify**, and **Backend** on **Render**.
 
 ---
 
@@ -32,7 +32,7 @@ Add these in **Environment**:
 | `PORT` | `10000` | ✅ (Render sets this; add if missing) |
 | `MONGODB_CONN` | Your MongoDB Atlas connection string | ✅ |
 | `JWT_SECRET` | A strong random string | ✅ |
-| `FRONTEND_URL` | Your Vercel URL, e.g. `https://pkblog.vercel.app` | ✅ |
+| `FRONTEND_URL` | Your frontend URL, e.g. `https://pkblog.vercel.app` or `https://pkblog.netlify.app` | ✅ |
 | `CLOUDINARY_APP_NAME` | Cloudinary cloud name | ✅ |
 | `CLOUDINARY_API_KEY` | Cloudinary API key | ✅ |
 | `CLOUDINARY_API_SECRET` | Cloudinary API secret | ✅ |
@@ -52,9 +52,9 @@ Click **Create Web Service**. After deploy, copy your API URL, e.g.:
 
 ---
 
-## 2. Frontend on Vercel
+## 2. Frontend Deployment
 
-### Step 1: Deploy from GitHub
+### Option A: Vercel
 
 1. Go to [vercel.com](https://vercel.com) and sign in
 2. Click **Add New** → **Project**
@@ -64,29 +64,29 @@ Click **Create Web Service**. After deploy, copy your API URL, e.g.:
    - **Framework Preset**: Vite (auto-detected)
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
+5. Add env var: `VITE_API_BASE_URL` = `https://pkblog-api.onrender.com/api`
+6. Deploy. Copy your URL, e.g. `https://pkblog.vercel.app`
 
-### Step 2: Environment Variables (Vercel Dashboard)
+### Option B: Netlify
 
-Add in **Environment Variables**:
+1. Go to [netlify.com](https://netlify.com) and sign in
+2. Click **Add new site** → **Import an existing project**
+3. Connect your GitHub repo
+4. Configure:
+   - **Base directory**: `Client`
+   - **Build command**: `npm run build` (or leave empty; `netlify.toml` has it)
+   - **Publish directory**: `dist`
+5. Add env var: **Site settings** → **Environment variables** → **Add a variable**
+   - Key: `VITE_API_BASE_URL`
+   - Value: `https://pkblog-api.onrender.com/api`
+6. Deploy. Copy your URL, e.g. `https://pkblog.netlify.app`
 
-| Key | Value |
-|-----|-------|
-| `VITE_API_BASE_URL` | `https://pkblog-api.onrender.com/api` |
+### Update Backend CORS
 
-Use your actual Render API URL and append `/api` (all API routes are under `/api`).
-
-### Step 3: Deploy
-
-Click **Deploy**. After deployment, copy your frontend URL, e.g.:
-
-`https://pkblog.vercel.app`
-
-### Step 4: Update Backend CORS
-
-Go back to Render → Your service → **Environment**  
-Update `FRONTEND_URL` to your exact Vercel URL:
-
-`https://pkblog.vercel.app`
+Go to Render → Your service → **Environment**  
+Set `FRONTEND_URL` to your frontend URL:
+- Vercel: `https://pkblog.vercel.app`
+- Netlify: `https://pkblog.netlify.app`
 
 Save. Render will redeploy with the new value.
 
@@ -105,13 +105,13 @@ Save. Render will redeploy with the new value.
 If you use Firebase/Google Auth:
 
 1. Add your **production domain** to Firebase Console → Authentication → Settings → Authorized domains
-2. Add: `pkblog.vercel.app` (and `onrender.com` if needed)
+2. Add: `pkblog.vercel.app` or `pkblog.netlify.app` (and `onrender.com` if needed)
 
 ### Cookie / Credentials
 
 `credentials: 'include'` is used for cookies. Ensure:
 
-- `FRONTEND_URL` in backend matches your Vercel domain
+- `FRONTEND_URL` in backend matches your frontend domain (Vercel or Netlify)
 - CORS is configured with `credentials: true` (already in your API)
 
 ---
@@ -121,5 +121,6 @@ If you use Firebase/Google Auth:
 | Service | URL Example |
 |---------|-------------|
 | Frontend (Vercel) | `https://pkblog.vercel.app` |
+| Frontend (Netlify) | `https://pkblog.netlify.app` |
 | Backend (Render) | `https://pkblog-api.onrender.com` |
 | API Base URL | `https://pkblog-api.onrender.com/api` |
