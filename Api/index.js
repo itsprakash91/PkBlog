@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser"
 import cors from 'cors'
 import mongoose from "mongoose"
 import AuthRoute from "./routes/Auth.route.js"
-import UserRoute from "./routes/user.route.js"
+import UserRoute from "./routes/User.route.js"
 import CategoryRoute from "./routes/Category.route.js"
 import BlogRoute from "./routes/Blog.route.js"
 import CommentRouote from "./routes/Comment.route.js"
